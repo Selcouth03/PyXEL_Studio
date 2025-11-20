@@ -39,7 +39,7 @@ def crear_interfaz_completa(ventana: ttk.Window):
     panel_lienzo.pack(fill="both", expand=True)
 
 
-
+###########################################################
 
 # label_paleta = ttk.Label(panel_paleta,text="Paleta")
 
@@ -58,7 +58,7 @@ def crear_interfaz_completa(ventana: ttk.Window):
 # for fila in range(22):
 #     for columna in range(50):
 #         crear_btn_lienzo(panel_lienzo, fila, columna)
-
+##################################################################################
 
 def crear_btn_lienzo(panel_lienzo: ttk.Frame, fila: int, columna: int):
     btn_lienzo = ttk.Button(panel_lienzo, width=1)
