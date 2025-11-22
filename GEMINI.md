@@ -34,7 +34,7 @@ El desarrollo debe adherirse estrictamente a un conjunto específico de 162 tóp
 
 ### 2. El Proyecto: "PyXEL Studio"
 
-- **Concepto:** Una aplicación de escritorio para crear "Pixel Art" de forma numérica. El usuario puede "pintar" en una cuadrícula (ej. 16x16) seleccionando colores de una paleta predefinida.
+- **Concepto:** Una aplicación de escritorio para crear "Pixel Art" de forma numérica. El usuario puede "pintar" en una cuadrícula (ej. 32x32) seleccionando colores de una paleta predefinida.
 - **Interfaz:** La GUI será construida utilizando la librería `ttkbootstrap`.
 - **Persistencia:** Los proyectos (lienzos) se guardarán y cargarán desde archivos con formato `.csv`. Cada celda en el archivo `.csv` corresponderá al código de color de un píxel en la cuadrícula.
 
@@ -46,7 +46,7 @@ Se han completado las fases de planificación previas a la codificación.
 
 #### Fase 1: Arquitectura y Alcance (Definido)
 - **Alcance:**
-  - Una cuadrícula de 16x16 píxeles.
+  - Una cuadrícula de 32x32 píxeles.
   - Una paleta de colores seleccionable.
   - Botones para "Guardar" y "Cargar" el lienzo.
 - **Arquitectura de Datos:**
@@ -72,6 +72,9 @@ Se han completado las fases de planificación previas a la codificación.
   - **Input:** El usuario hace clic en el botón "Guardar".
   - **Proceso:** Se recorre la matriz en memoria y se escribe su contenido en un archivo `.csv` usando el módulo `csv`.
   - **Output:** Un archivo `.csv` es creado o sobreescrito en el directorio `assets/`.
+- **Manejo de Eventos:**
+  - Se priorizará el uso del método `.bind()` para capturar las interacciones del usuario (ej. `<Button-1>` para clics) en lugar del atributo `command`.
+  - **Justificación:** El método `.bind()` ofrece mayor flexibilidad, ya que la función controladora (handler) recibe un objeto `event` con información contextual detallada (como las coordenadas del clic). Esto es fundamental para widgets como el `Canvas` y permite un manejo de eventos más rico y centralizado.
 - **Especificación Funcional:** Se han definido las responsabilidades, argumentos y tipos de retorno para las funciones clave (ej. `guardar_csv`, `cargar_csv`, `inicializar_matriz`).
 - **Roadmap de Hitos:**
   1. Construcción de la GUI estática.
@@ -84,5 +87,5 @@ Se han completado las fases de planificación previas a la codificación.
 - **Type Hints:** Es obligatorio el uso de anotaciones de tipo del módulo `typing` (ej. `List`, `Dict`, `Tuple`) para todas las firmas de funciones.
 - **Nomenclatura:**
   - `snake_case` para variables y nombres de función.
-  - `UPPER_CASE` para constantes (ej. `TAMANO_GRID = 16`).
+  - `UPPER_CASE` para constantes (ej. `FILAS_LIENZO = 32`).
   - Prefijos para widgets de la GUI para mayor claridad (ej. `btn_guardar`, `frm_paleta`).

@@ -1,3 +1,6 @@
+# --- Constantes de la Aplicación ---
+FILAS_LIENZO = 32
+COLUMNAS_LIENZO = 32
 
 PALETA_COLORES = [
     # --- Escala de Grises ---
@@ -32,35 +35,37 @@ PALETA_COLORES = [
     "#4B0082",  # Índigo (Púrpura oscuro)
 ]
 
-import ttkbootstrap as ttk
-import gui_setup
-import file_manager
+# import file_manager
 
-MATRIZ_COLORES: list[list[str]] = []
-COLOR_ACTUAL: str = ""
+# Se inicializa la matriz directamente, haciendo innecesaria la función inicializar_matriz.
+matriz_colores: list[list[str]] = [
+    ["#FFFFFF" for _ in range(COLUMNAS_LIENZO)] for _ in range(FILAS_LIENZO)
+]
+# Se establece un color por defecto al iniciar la aplicación.
+color_actual: str = "#FFFFFF"  # Negro
 
-def inicializar_matriz(filas: int, columnas: int):
-    global MATRIZ_COLORES
-    COLOR_POR_DEFECTO = "#FFFFF"
 
-    MATRIZ_COLORES = [[COLOR_POR_DEFECTO for columna in range(columnas)]for fila in range(filas)]
+# La función se modifica para aceptar un color y no depender del estado global COLOR_ACTUAL.
+def actualizar_pixel(fila: int, columna: int, color: str) -> None:
+    if 0 <= fila < FILAS_LIENZO and 0 <= columna < COLUMNAS_LIENZO:
+        matriz_colores[fila][columna] = color
 
-def actualizar_pixel(fila:int, columnas:int) -> str:
-    nuevo_color = COLOR_ACTUAL
-    MATRIZ_COLORES[fila][columnas] = nuevo_color
-    return nuevo_color
 
-def cambiar_color_seleccionado(nuevo_color:str) -> None:
-    global COLOR_ACTUAL
-    COLOR_ACTUAL = nuevo_color
+def cambiar_color_seleccionado(nuevo_color: str) -> None:
+    """Actualiza la variable global que almacena el color seleccionado."""
+    global color_actual
+    color_actual = nuevo_color
+
 
 def obtener_color_actual() -> str:
-    return COLOR_ACTUAL
+    """Devuelve el color actualmente seleccionado."""
+    return color_actual
+
 
 def obtener_matriz_completa() -> list[list[str]]:
-    return MATRIZ_COLORES
+    return matriz_colores
 
-def remplazar_matriz(nueva_matriz:list[list[str]]) -> None:
-    global MATRIZ_COLORES
-    MATRIZ_COLORES = nueva_matriz
 
+def remplazar_matriz(nueva_matriz: list[list[str]]) -> None:
+    global matriz_colores
+    matriz_colores = nueva_matriz
