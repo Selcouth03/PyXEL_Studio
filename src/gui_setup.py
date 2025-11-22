@@ -111,7 +111,7 @@ def crear_interfaz_completa(ventana: ttk.Window):
 
     # Panel para manejo de archivos
     panel_manejo_archivos = ttk.Frame(panel_paleta, bootstyle="secondary")
-    panel_manejo_archivos.pack(fill="x", side="bottom", pady=40)
+    panel_manejo_archivos.pack(fill="x", side="bottom", pady=20)
 
     seccion_entrada_archivo = ttk.Labelframe(
         panel_manejo_archivos, text="Nombre del archivo", bootstyle="sec"
