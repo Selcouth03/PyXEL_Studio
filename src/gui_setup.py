@@ -84,9 +84,7 @@ def crear_interfaz_completa(ventana: ttk.Window):
 
     # Frame para la paleta de colores
     frame_paleta_colores = ttk.Frame(panel_paleta, style="secondary")
-    frame_paleta_colores.pack(
-        side="top", fill="x", expand=True, padx=10, pady=20, anchor="n"
-    )
+    frame_paleta_colores.pack(side="top", fill="x", padx=10, pady=20, anchor="n")
     for j in range(COLUMNAS_PALETA):
         frame_paleta_colores.columnconfigure(j, weight=1)
 
