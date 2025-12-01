@@ -23,6 +23,35 @@ Para ejecutar PyXEL Studio en tu máquina local, sigue estos pasos.
 
 Asegúrate de tener instalada una versión reciente de **Python** (3.8 o superior). Puedes descargarla desde [python.org](https://www.python.org/).
 
+**Importante para Python 3.14+:** Este proyecto requiere `tkinter`, que en Python 3.14 no viene instalado por defecto. Necesitas instalarlo según tu sistema operativo:
+
+- **Fedora/RHEL:**
+
+  ```bash
+  sudo dnf install python3-tkinter
+  ```
+
+- **Ubuntu/Debian:**
+
+  ```bash
+  sudo apt-get install python3-tk
+  ```
+
+- **Arch Linux:**
+
+  ```bash
+  sudo pacman -S tk
+  ```
+
+- **macOS:**
+
+  ```bash
+  brew install python-tk@3.14
+  ```
+
+- **Windows:**
+  Asegúrate de marcar la opción "tcl/tk and IDLE" durante la instalación de Python.
+
 ### 2. Instala `uv`
 
 Este proyecto utiliza `uv`, un instalador y resolutor de paquetes de Python extremadamente rápido, escrito en Rust. Necesitas instalarlo para manejar el entorno virtual y las dependencias.
@@ -66,7 +95,7 @@ Este único comando se encargará de:
 Una vez que el entorno esté sincronizado, puedes ejecutar la aplicación. La forma recomendada es usar `uv` para que se encargue de activar el entorno virtual por ti.
 
 ```bash
-uv run python main.py
+uv run main.py
 ```
 
 ¡Y listo! La ventana de PyXEL Studio debería aparecer en tu pantalla.
