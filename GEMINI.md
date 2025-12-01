@@ -1,6 +1,6 @@
 # CONTEXTO DEL PROYECTO: PyXEL Studio
 
-Este documento sirve como guía fundamental para el desarrollo del proyecto "PyXEL Studio". Define las limitaciones, el alcance, la arquitectura y los estándares a seguir.
+Este documento sirve como guía fundamental para el desarrollo del proyecto "PyXEL Studio". Define las limitaciones, el alcance, la arquitectura y los estándares seguidos.
 
 ---
 
@@ -40,52 +40,31 @@ El desarrollo debe adherirse estrictamente a un conjunto específico de 162 tóp
 
 ---
 
-### 3. Estado del Proyecto (Organización Completada)
+### 3. Estado del Proyecto (Implementación y Documentación Completadas)
 
-Se han completado las fases de planificación previas a la codificación.
+Se ha completado el ciclo de desarrollo de la aplicación, incluyendo la implementación de todas las funcionalidades y la documentación completa del código fuente.
 
-#### Fase 1: Arquitectura y Alcance (Definido)
-- **Alcance:**
-  - Una cuadrícula de 32x32 píxeles.
-  - Una paleta de colores seleccionable.
-  - Botones para "Guardar" y "Cargar" el lienzo.
-- **Arquitectura de Datos:**
-  - La representación del lienzo en memoria será una lista de listas (matriz) de strings: `List[List[str]]`. Cada string es un código de color (ej. "#FFFFFF").
-- **Estructura de Directorios:**
-  ```
-  PyXEL_Studio/
-  ├── main.py                 # Punto de entrada (Inicia la GUI)
-  ├── assets/                 # Directorio para guardar los .csv generados
-  └── src/                    # Paquete de código fuente
-      ├── __init__.py         # Marca 'src' como un paquete de Python
-      ├── gui_setup.py        # Funciones para construir la ventana y widgets
-      ├── logic.py            # Lógica de la aplicación (manejo de la matriz, color actual)
-      └── file_manager.py     # Lógica de persistencia (lectura/escritura de CSV)
-  ```
+#### Cómo Ejecutar la Aplicación
+Para ejecutar la aplicación, asegúrate de tener todas las dependencias instaladas (principalmente `ttkbootstrap`) y luego ejecuta el archivo `main.py` desde la raíz del proyecto:
+```bash
+python main.py
+```
 
-#### Fase 2: Diseño Lógico y Flujo (Definido)
-- **Flujo "Pintar":**
-  - **Input:** El usuario hace clic en una celda de la cuadrícula.
-  - **Proceso:** Se actualiza la matriz en memoria (`matriz[fila][col] = color_actual`) y se cambia el color de fondo del widget correspondiente (`boton[fila][col].config(bg=color_actual)`).
-  - **Output:** El color de la celda cambia en la pantalla.
-- **Flujo "Guardar":**
-  - **Input:** El usuario hace clic en el botón "Guardar".
-  - **Proceso:** Se recorre la matriz en memoria y se escribe su contenido en un archivo `.csv` usando el módulo `csv`.
-  - **Output:** Un archivo `.csv` es creado o sobreescrito en el directorio `assets/`.
-- **Manejo de Eventos:**
-  - Se priorizará el uso del método `.bind()` para capturar las interacciones del usuario (ej. `<Button-1>` para clics) en lugar del atributo `command`.
-  - **Justificación:** El método `.bind()` ofrece mayor flexibilidad, ya que la función controladora (handler) recibe un objeto `event` con información contextual detallada (como las coordenadas del clic). Esto es fundamental para widgets como el `Canvas` y permite un manejo de eventos más rico y centralizado.
-- **Especificación Funcional:** Se han definido las responsabilidades, argumentos y tipos de retorno para las funciones clave (ej. `guardar_csv`, `cargar_csv`, `inicializar_matriz`).
-- **Roadmap de Hitos:**
-  1. Construcción de la GUI estática.
-  2. Implementación de la lógica de pintado.
-  3. Implementación de la funcionalidad de guardado y carga (CSV).
-  4. Documentación final (Docstrings y comentarios).
+#### Arquitectura Final
+La arquitectura del software sigue el diseño planificado, separando las responsabilidades en tres módulos principales dentro del paquete `src`:
 
-#### Fase 3: Estándares de Documentación (Definido)
-- **Docstrings:** Todas las funciones y módulos deben tener docstrings siguiendo el formato estándar de Python (descripción, argumentos, retornos).
-- **Type Hints:** Es obligatorio el uso de anotaciones de tipo del módulo `typing` (ej. `List`, `Dict`, `Tuple`) para todas las firmas de funciones.
-- **Nomenclatura:**
-  - `snake_case` para variables y nombres de función.
-  - `UPPER_CASE` para constantes (ej. `FILAS_LIENZO = 32`).
-  - Prefijos para widgets de la GUI para mayor claridad (ej. `btn_guardar`, `frm_paleta`).
+- **`logic.py` (Modelo):** Contiene el estado de la aplicación. Gestiona la matriz de colores del lienzo (`matriz_colores`), el color actual seleccionado (`color_actual`) y la paleta de colores (`PALETA_COLORES`). Proporciona funciones para modificar y acceder a estos datos de forma segura.
+
+- **`file_manager.py` (Persistencia):** Se encarga de la lógica de guardado y carga. Sus funciones `guardar_csv` y `cargar_csv` interactúan con el sistema de archivos para persistir y recuperar el estado del lienzo en formato `.csv`, incluyendo validaciones robustas de los datos.
+
+- **`gui_setup.py` (Vista y Controlador):** Es responsable de construir y gestionar la interfaz gráfica. Crea todos los widgets, los posiciona y define los controladores de eventos (`on_click`, `atrapar_nombre_archivo`, etc.) que conectan las acciones del usuario con las funciones de los módulos `logic` y `file_manager`.
+
+- **`main.py` (Punto de Entrada):** Es un script simple que inicializa la ventana principal de `ttkbootstrap` y delega la construcción de la interfaz a `gui_setup.py`, iniciando el bucle de la aplicación.
+
+#### Roadmap de Hitos
+Todos los hitos planificados para la versión 1.0 han sido completados.
+
+1.  **Construcción de la GUI estática:** `(Completado)`
+2.  **Implementación de la lógica de pintado:** `(Completado)`
+3.  **Implementación de la funcionalidad de guardado y carga (CSV):** `(Completado)`
+4.  **Documentación final (Docstrings y comentarios):** `(Completado)`

@@ -1,59 +1,74 @@
-import ttkbootstrap as ttk
+"""Módulo para la construcción de la interfaz de usuario (Vista y Controlador).
 
+Este módulo es responsable de crear todos los widgets de la interfaz gráfica
+utilizando ttkbootstrap. También contiene las funciones controladoras que
+responden a los eventos del usuario (clics de botón, etc.), conectando la
+interfaz con la lógica de negocio (`logic`) y la persistencia de archivos
+(`file_manager`).
+"""
+import ttkbootstrap as ttk
+from ttkbootstrap.dialogs import Messagebox
 from . import logic
+from . import file_manager
 
 # Las constantes de la paleta se mantienen para la construcción de la GUI.
 FILAS_PALETA = 8
 COLUMNAS_PALETA = 3
 
 
-def on_color_seleccionado(event, color: str, style: ttk.Style):  # type: ignore
-    """
-    Controlador de evento para cuando se selecciona un color de la paleta.
-    Actualiza el estado de la lógica y la GUI para reflejar el nuevo color.
-    """
-    # 1. Actualizar el Modelo (la lógica)
-    logic.cambiar_color_seleccionado(color)
-
-    # 2. Actualizar la Vista (el cuadro de 'Color seleccionado')
-    style.configure("EstiloCuadro.TButton", background=color)  # pyright: ignore[reportUnknownMemberType]
-    style.map(
-        "EstiloCuadro.TButton",
-        background=[("active", color)],
-        bordercolor=[("active", color)],
-        lightcolor=[("active", color)],
-        darkcolor=[("active", color)],
-    )
-
-
 def crear_interfaz_completa(ventana: ttk.Window):
-    ancho_pantalla = ventana.winfo_screenwidth()
-    alto_pantalla = ventana.winfo_screenheight()
+    """Construye y orquesta la creación de toda la interfaz gráfica de la aplicación."""
+    ventana.geometry(
+        f"{ventana.winfo_screenwidth()}x{ventana.winfo_screenheight()}"
+    )
     style = ttk.Style()
 
-    # Panel seccion de paletas
-    panel_paleta = ttk.Frame(
-        ventana,
-        style="secondary",
-        width=400,  # noqa: F405
+    panel_lateral = _crear_panel_lateral(ventana)
+    lienzo = _crear_lienzo(ventana)
+
+    # --- Rellenar el panel lateral ---
+    _crear_seccion_color_actual(panel_lateral, style)
+    _crear_separador(panel_lateral, style)
+    _crear_seccion_paleta(panel_lateral, style)
+    _crear_seccion_archivos(panel_lateral, ventana, lienzo)
+
+
+def _crear_panel_lateral(ventana: ttk.Window) -> ttk.Frame:
+    """Crea el panel lateral principal que contiene los controles."""
+    panel_lateral = ttk.Frame(ventana, style="secondary", width=400)
+    panel_lateral.pack_propagate(False)
+    panel_lateral.pack(side="left", fill="y")
+    return panel_lateral
+
+
+def _crear_lienzo(ventana: ttk.Window) -> ttk.Canvas:
+    """Crea el lienzo principal para dibujar."""
+    lienzo = ttk.Canvas(ventana, background="white", highlightthickness=0)
+    lienzo.pack(fill="both", expand=True)
+    lienzo.bind("<Configure>", lambda _event: crear_grid_lienzo(lienzo))
+    lienzo.bind(
+        "<Button-1>",
+        lambda event: on_lienzo_click(event, lienzo, logic.obtener_color_actual()),
     )
-    panel_paleta.pack_propagate(False)
-    panel_paleta.pack(side="left", fill="y")
+    return lienzo
 
-    # Frame Color Actual
-    frame_color_actual = ttk.Frame(panel_paleta, bootstyle="secondary")
 
-    # Label y Boton de color actual
+def _crear_seccion_color_actual(parent: ttk.Frame, style: ttk.Style):
+    """Crea la sección de UI que muestra el color actualmente seleccionado."""
+    frame_color_actual = ttk.Frame(parent, bootstyle="secondary")
+    frame_color_actual.pack(side="top", pady=20, fill="x", padx=10)
+
     label_color_actual = ttk.Label(
         frame_color_actual, text="Color seleccionado", style="secondary.Inverse.TLabel"
     )
+    label_color_actual.pack()
 
-    # Damos estilo al cuadro que muestra el color actual
-    style.configure(  # type: ignore
+    # Estilo y creación del cuadro que muestra el color actual
+    style.configure(
         "EstiloCuadro.TButton",
         font=(None, 18),
         width=5,
-        background=logic.color_actual,  # Inicia con el color por defecto
+        background=logic.color_actual,
         bordercolor=logic.color_actual,
         focusthickness=0,
         lightcolor=logic.color_actual,
@@ -67,78 +82,83 @@ def crear_interfaz_completa(ventana: ttk.Window):
         lightcolor=[("active", logic.color_actual)],
         darkcolor=[("active", logic.color_actual)],
     )
-    cuadro_color_actual = ttk.Button(
-        frame_color_actual,
-        style="EstiloCuadro.TButton",
-    )
-
-    label_color_actual.pack()
+    cuadro_color_actual = ttk.Button(frame_color_actual, style="EstiloCuadro.TButton")
     cuadro_color_actual.pack(pady=10)
-    frame_color_actual.pack(side="top", pady=20, fill="x", padx=10)
 
-    # Separador
+
+def _crear_separador(parent: ttk.Frame, style: ttk.Style):
+    """Crea un separador visual."""
     color_separador = style.lookup("light.TFrame", "background")
-    style.configure("ColorContraste.TSeparator", background=color_separador)  # type: ignore
-    separador = ttk.Separator(panel_paleta, style="ColorContraste.TSeparator")
+    style.configure("ColorContraste.TSeparator", background=color_separador)
+    separador = ttk.Separator(parent, style="ColorContraste.TSeparator")
     separador.pack(side="top", pady=10, fill="x", padx=20)
 
-    # Frame para la paleta de colores
-    frame_paleta_colores = ttk.Frame(panel_paleta, style="secondary")
-    frame_paleta_colores.pack(side="top", fill="x", padx=10, pady=20, anchor="n")
+
+def _crear_seccion_paleta(parent: ttk.Frame, style: ttk.Style):
+    """Crea la sección de UI que contiene la paleta de colores."""
+    frame_paleta = ttk.Frame(parent, style="secondary")
+    frame_paleta.pack(side="top", fill="x", padx=10, pady=20, anchor="n")
 
     for j in range(COLUMNAS_PALETA):
-        frame_paleta_colores.columnconfigure(j, weight=1)
+        frame_paleta.columnconfigure(j, weight=1)
 
-    style.configure(  # type: ignore
-        "Paleta.TButton",
-        relief="flat",
-        padding=(25, 10),
-        borderwidth=0,
-    )
+    style.configure("Paleta.TButton", relief="flat", padding=(25, 10), borderwidth=0)
 
     # Crear botones de la paleta
-    indice_paleta_colores = -1
     for i in range(FILAS_PALETA):
         for j in range(COLUMNAS_PALETA):
-            indice_paleta_colores += 1
-            # Pasamos el 'style' para que los botones puedan interactuar con él
+            indice = i * COLUMNAS_PALETA + j
             crear_btn_paleta(
-                panel_paleta=frame_paleta_colores,
-                style=style,
-                fila=i,
-                columna=j,
-                indice=indice_paleta_colores,
+                panel_paleta=frame_paleta, style=style, fila=i, columna=j, indice=indice
             )
 
-    # Panel para manejo de archivos
-    panel_manejo_archivos = ttk.Frame(panel_paleta, bootstyle="secondary")
-    panel_manejo_archivos.pack(fill="x", side="bottom", pady=20)
 
-    seccion_entrada_archivo = ttk.Labelframe(
-        panel_manejo_archivos, text="Nombre del archivo", bootstyle="sec"
+def _crear_seccion_archivos(
+    parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.Canvas
+):
+    """Crea la sección de UI para guardar y cargar archivos."""
+    panel_archivos = ttk.Frame(parent, bootstyle="secondary")
+    panel_archivos.pack(fill="x", side="bottom", pady=20)
+
+    seccion_entrada = ttk.Labelframe(
+        panel_archivos, text="Nombre del archivo", bootstyle="sec"
     )
-    seccion_entrada_archivo.pack(side="top", pady=10)
+    seccion_entrada.pack(side="top", pady=10)
 
-    entrada_archivo = ttk.Entry(seccion_entrada_archivo)
+    entrada_archivo = ttk.Entry(seccion_entrada)
     entrada_archivo.pack()
 
-    btn_guardar = ttk.Button(panel_manejo_archivos, text="Guardar")
+    btn_guardar = ttk.Button(panel_archivos, text="Guardar")
     btn_guardar.pack(side="top", anchor="center", pady=10)
-
-    btn_cargar = ttk.Button(panel_manejo_archivos, text="Cargar")
-    btn_cargar.pack(side="top", anchor="center", pady=10)
-
-    # Panel del Lienzo
-    lienzo = ttk.Canvas(ventana, background="white", highlightthickness=0)
-    lienzo.pack(fill="both", expand=True)
-    lienzo.bind("<Configure>", lambda event: crear_grid_lienzo(lienzo))
-    # Se actualiza el bind para usar el color de la lógica en lugar de uno harcodeado
-    lienzo.bind(
+    btn_guardar.bind(
         "<Button-1>",
-        lambda event: on_lienzo_click(event, lienzo, logic.obtener_color_actual()),
+        lambda _event: atrapar_nombre_archivo(entrada_archivo, ventana),
     )
 
-    ventana.geometry(f"{ancho_pantalla}x{alto_pantalla}")
+    btn_cargar = ttk.Button(panel_archivos, text="Cargar")
+    btn_cargar.pack(side="top", anchor="center", pady=10)
+    btn_cargar.bind(
+        "<Button-1>",
+        lambda _evento: cargar_archivo_guardado(
+            entrada_archivo, ventana, lienzo
+        ),
+    )
+
+
+def on_color_seleccionado(_event, color: str, style: ttk.Style):  # type: ignore
+    """
+    Controlador de evento para cuando se selecciona un color de la paleta.
+    Actualiza el estado de la lógica y la GUI para reflejar el nuevo color.
+    """
+    logic.cambiar_color_seleccionado(color)
+    style.configure("EstiloCuadro.TButton", background=color)  # pyright: ignore[reportUnknownMemberType]
+    style.map(
+        "EstiloCuadro.TButton",
+        background=[("active", color)],
+        bordercolor=[("active", color)],
+        lightcolor=[("active", color)],
+        darkcolor=[("active", color)],
+    )
 
 
 def on_lienzo_click(event, lienzo: ttk.Canvas, color: str):  # type: ignore
@@ -189,6 +209,9 @@ def crear_btn_paleta(
     panel_paleta: ttk.Frame, style: ttk.Style, fila: int, columna: int, indice: int
 ):
     """Crea y posiciona un botón individual de la paleta de colores."""
+    if indice >= len(logic.PALETA_COLORES):
+        return  # No crear botón si no hay color para él
+
     color_fondo = logic.PALETA_COLORES[indice]
     nombre_estilo = f"Color{indice}.Paleta.TButton"
 
@@ -197,11 +220,111 @@ def crear_btn_paleta(
 
     btn_panel = ttk.Button(panel_paleta, style=nombre_estilo)
     btn_panel.grid(row=fila, column=columna, padx=5, pady=15)
-
-    # Se usa .bind() para vincular el clic a la función controladora.
-    # La lambda es necesaria para "capturar" el valor actual de color_fondo
-    # y pasarlo como argumento a la función.
     btn_panel.bind(
         "<Button-1>",
-        lambda event, c=color_fondo: on_color_seleccionado(event, c, style),
+        lambda _event, c=color_fondo: on_color_seleccionado(_event, c, style),
     )
+
+
+def atrapar_nombre_archivo(entrada_archivo: ttk.Entry, ventana: ttk.Window):
+    """
+    Controlador para el botón Guardar. Gestiona la lógica de guardado y la
+    retroalimentación al usuario.
+    """
+    nombre = entrada_archivo.get()
+    matriz_a_guardar = logic.obtener_matriz_completa()
+
+    # 1. Primer intento de guardado (sin sobreescribir)
+    estado = file_manager.guardar_csv(nombre, matriz_a_guardar, sobreescribir=False)
+
+    # 2. Gestionar si el archivo ya existe
+    if estado == "archivo_existe":
+        confirmar = Messagebox.okcancel(
+            parent=ventana,
+            title="Confirmar Sobrescritura",
+            message=f"El archivo '{nombre}.csv' ya existe.\n¿Desea sobrescribirlo?",
+        )
+        if confirmar:
+            # Si el usuario confirma, se intenta guardar de nuevo forzando la sobreescritura
+            estado = file_manager.guardar_csv(
+                nombre, matriz_a_guardar, sobreescribir=True
+            )
+        else:
+            # Si el usuario cancela, la operación termina aquí.
+            return
+
+    # 3. Mostrar resultado final de la operación
+    if estado == "exito":
+        Messagebox.showinfo(
+            parent=ventana,
+            title="Guardado Exitoso",
+            message=f"El lienzo se ha guardado como '{nombre}.csv'.",
+        )
+        entrada_archivo.delete(0, "end")
+    elif estado == "nombre_vacio":
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Nombre inválido",
+            message="El nombre del archivo no puede estar vacío.",
+        )
+    elif estado == "error_escritura":
+        Messagebox.show_error(
+            parent=ventana,
+            title="Error de Guardado",
+            message="Ocurrió un error inesperado al intentar guardar el archivo.",
+        )
+
+
+def cargar_archivo_guardado(
+    entrada_archivo: ttk.Entry, ventana: ttk.Window, lienzo: ttk.Canvas
+):
+    """
+    Controlador para el botón Cargar. Gestiona la lógica de carga y la
+    retroalimentación al usuario.
+    """
+    nombre = entrada_archivo.get()
+    resultado = file_manager.cargar_csv(nombre)
+
+    # Caso de éxito: el resultado es una lista (la matriz)
+    if isinstance(resultado, list):
+        logic.remplazar_matriz(resultado)
+        crear_grid_lienzo(lienzo)
+        Messagebox.showinfo(
+            parent=ventana,
+            title="Carga Exitosa",
+            message=f"Se ha cargado el lienzo desde '{nombre}.csv'.",
+        )
+        entrada_archivo.delete(0, "end")
+        return
+
+    # Casos de error: el resultado es un string con un código
+    if resultado == "nombre_vacio":
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Nombre inválido",
+            message="El nombre del archivo no puede estar vacío.",
+        )
+    elif resultado == "archivo_no_existe":
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Archivo no encontrado",
+            message=f"El archivo '{nombre}.csv' no fue encontrado.",
+        )
+    elif resultado == "archivo_vacio":
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Archivo Vacío",
+            message=f"El archivo '{nombre}.csv' está vacío y no se puede cargar.",
+        )
+    elif resultado == "formato_invalido":
+        Messagebox.show_error(
+            parent=ventana,
+            title="Formato Inválido",
+            message=f"El archivo '{nombre}.csv' está corrupto o no tiene el formato esperado (32x32, colores hexadecimales).",
+        )
+    elif resultado == "error_lectura":
+        Messagebox.show_error(
+            parent=ventana,
+            title="Error de Carga",
+            message="Ocurrió un error inesperado al intentar cargar el archivo.",
+        )

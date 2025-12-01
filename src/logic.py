@@ -1,3 +1,13 @@
+"""Módulo de lógica de negocio y estado de la aplicación (Modelo).
+
+Este módulo actúa como la única fuente de verdad para el estado de la aplicación.
+Gestiona la matriz de colores del lienzo, el color actualmente seleccionado por
+el usuario y la paleta de colores disponible.
+
+No contiene lógica de interfaz de usuario ni de acceso a archivos, manteniendo
+una alta cohesión y bajo acoplamiento.
+"""
+
 # --- Constantes de la Aplicación ---
 FILAS_LIENZO = 32
 COLUMNAS_LIENZO = 32
@@ -35,18 +45,22 @@ PALETA_COLORES = [
     "#4B0082",  # Índigo (Púrpura oscuro)
 ]
 
-# import file_manager
-
-# Se inicializa la matriz directamente, haciendo innecesaria la función inicializar_matriz.
+# Matriz que representa el estado de cada píxel en el lienzo.
 matriz_colores: list[list[str]] = [
     ["#FFFFFF" for _ in range(COLUMNAS_LIENZO)] for _ in range(FILAS_LIENZO)
 ]
-# Se establece un color por defecto al iniciar la aplicación.
-color_actual: str = "#FFFFFF"  # Negro
+# Color seleccionado actualmente por el usuario.
+color_actual: str = "#FFFFFF"
 
 
-# La función se modifica para aceptar un color y no depender del estado global COLOR_ACTUAL.
 def actualizar_pixel(fila: int, columna: int, color: str) -> None:
+    """Actualiza el color de un único píxel en la matriz de estado.
+
+    Args:
+        fila (int): El índice de la fila del píxel a actualizar.
+        columna (int): El índice de la columna del píxel a actualizar.
+        color (str): El nuevo color en formato hexadecimal (ej. "#FFFFFF").
+    """
     if 0 <= fila < FILAS_LIENZO and 0 <= columna < COLUMNAS_LIENZO:
         matriz_colores[fila][columna] = color
 
@@ -63,9 +77,18 @@ def obtener_color_actual() -> str:
 
 
 def obtener_matriz_completa() -> list[list[str]]:
+    """Devuelve una referencia a la matriz de colores completa."""
     return matriz_colores
 
 
 def remplazar_matriz(nueva_matriz: list[list[str]]) -> None:
+    """Reemplaza la matriz de estado actual con una nueva.
+
+    Utilizado al cargar un archivo.
+
+    Args:
+        nueva_matriz (list[list[str]]): La nueva matriz de colores que
+            reemplazará a la actual.
+    """
     global matriz_colores
     matriz_colores = nueva_matriz
