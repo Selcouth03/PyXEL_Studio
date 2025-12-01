@@ -96,3 +96,9 @@ def remplazar_matriz(nueva_matriz: list[list[str]]) -> None:
     """
     global matriz_colores
     matriz_colores = nueva_matriz
+
+
+def limpiar_lienzo() -> None:
+    """Limpia el lienzo, restableciendo todos los píxeles al color blanco."""
+    matriz_blanca = crear_matriz_inicial()
+    remplazar_matriz(matriz_blanca)

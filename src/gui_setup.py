@@ -29,6 +29,7 @@ def crear_interfaz_completa(ventana: ttk.Window):
     _crear_seccion_color_actual(panel_lateral, style)
     _crear_separador(panel_lateral, style)
     _crear_seccion_paleta(panel_lateral, style)
+    _crear_seccion_limpieza(panel_lateral, lienzo)
     _crear_seccion_archivos(panel_lateral, ventana, lienzo)
 
 
@@ -112,6 +113,23 @@ def _crear_seccion_paleta(parent: ttk.Frame, style: ttk.Style):
             )
 
 
+def _crear_seccion_limpieza(parent: ttk.Frame, lienzo: ttk.Canvas):
+    """Crea la sección con el botón para limpiar el lienzo."""
+    frame_limpieza = ttk.Frame(parent, bootstyle="secondary")
+    frame_limpieza.pack(side="top", fill="x", padx=10, pady=10)
+
+    btn_limpiar = ttk.Button(
+        frame_limpieza,
+        text="Limpiar Lienzo",
+        bootstyle="light",
+    )
+    btn_limpiar.pack(fill="x")
+    btn_limpiar.bind(
+        "<Button-1>",
+        lambda _event: on_limpiar_lienzo(lienzo),
+    )
+
+
 def _crear_seccion_archivos(parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.Canvas):
     """Crea la sección de UI para guardar, cargar y eliminar archivos."""
     panel_archivos = ttk.Frame(parent, bootstyle="secondary")
@@ -145,6 +163,12 @@ def _crear_seccion_archivos(parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.
         "<Button-1>",
         lambda _evento: eliminar_archivo_guardado(entrada_archivo, ventana, lienzo),
     )
+
+
+def on_limpiar_lienzo(lienzo: ttk.Canvas):
+    """Limpia el lienzo y lo restablece a su estado inicial (blanco)."""
+    logic.limpiar_lienzo()
+    crear_grid_lienzo(lienzo)
 
 
 def on_color_seleccionado(_event, color: str, style: ttk.Style):  # type: ignore
