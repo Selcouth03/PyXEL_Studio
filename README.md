@@ -1,6 +1,6 @@
 # PyXEL Studio
 
-¡Una sencilla aplicación de escritorio para crear pixel art, construida con Python y `ttkbootstrap`!
+¡Una sencilla aplicación de escritorio para crear pixel art, construida con Python y `ttkbootstrap` delightful!
 
 ## ✨ Características
 
@@ -15,48 +15,51 @@
 - **ttkbootstrap:** Para la creación de la interfaz gráfica de usuario.
 - **uv:** Para la gestión del entorno virtual y las dependencias del proyecto.
 
-## 🚀 Instalación y Ejecución
+## 🚀 Instalación y Ejecución (Automatizado)
 
-Para ejecutar PyXEL Studio en tu máquina local, sigue estos pasos.
+Hemos simplificado todo el proceso para que puedas empezar en segundos. Solo necesitas tener **Python 3.8+** y **Git** instalados en tu sistema.
+
+### Paso 1: Configurar el Entorno
+
+Ejecuta el script de configuración. Este se encargará de todo lo necesario:
+- Verificará e instalará `Tkinter` (la dependencia base para la GUI).
+- Instalará `uv` (el gestor de paquetes y entorno virtual).
+- Sincronizará las dependencias de Python del proyecto.
+
+```bash
+bash setup.sh
+```
+*El script podría pedirte tu contraseña para instalar paquetes del sistema (`python3-tk`) si es necesario.*
+
+### Paso 2: Ejecutar la Aplicación
+
+Una vez finalizada la configuración, ejecuta la aplicación con el siguiente comando:
+
+```bash
+bash run.sh
+```
+Este script se encarga de encontrar automáticamente las librerías necesarias y lanzar la aplicación. ¡Y listo! La ventana de PyXEL Studio debería aparecer en tu pantalla.
+
+---
+
+<details>
+<summary><b>(Alternativa) Instalación y Ejecución Manual</b></summary>
+
+Estos pasos son una alternativa manual, **solo necesarios si el script `setup.sh` no funciona o si deseas un control más granular sobre la instalación.**
 
 ### 1. Prerrequisitos
 
 Asegúrate de tener instalada una versión reciente de **Python** (3.8 o superior). Puedes descargarla desde [python.org](https://www.python.org/).
 
-**Importante para Python 3.14+:** Este proyecto requiere `tkinter`, que en Python 3.14 no viene instalado por defecto. Necesitas instalarlo según tu sistema operativo:
+**Si el script `setup.sh` falla en instalar `tkinter` automáticamente, aquí tienes las instrucciones manuales:**
 
-- **Fedora/RHEL:**
-
-  ```bash
-  sudo dnf install python3-tkinter
-  ```
-
-- **Ubuntu/Debian:**
-
-  ```bash
-  sudo apt-get install python3-tk
-  ```
-
-- **Arch Linux:**
-
-  ```bash
-  sudo pacman -S tk
-  ```
-
-- **macOS:**
-
-  ```bash
-  brew install python-tk@3.14
-  ```
-
-- **Windows:**
-  Asegúrate de marcar la opción "tcl/tk and IDLE" durante la instalación de Python.
+- **Ubuntu/Debian:** `sudo apt-get install python3-tk`
+- **Fedora/RHEL:** `sudo dnf install python3-tkinter`
+- **Arch Linux:** `sudo pacman -S tk`
 
 ### 2. Instala `uv`
 
-Este proyecto utiliza `uv`, un instalador y resolutor de paquetes de Python extremadamente rápido, escrito en Rust. Necesitas instalarlo para manejar el entorno virtual y las dependencias.
-
-Puedes instalar `uv` de dos maneras:
+**Si el script `setup.sh` falla en instalar `uv` automáticamente, puedes instalarlo manualmente así:**
 
 - **Opción A (Recomendada): Usando `curl` (Linux, macOS, WSL)**
 
@@ -77,35 +80,24 @@ Puedes instalar `uv` de dos maneras:
 
 ### 3. Crea y Sincroniza el Entorno Virtual
 
-Con `uv` instalado, el siguiente paso es crear un entorno virtual y sincronizar las dependencias del proyecto. Este proceso leerá los archivos `pyproject.toml` y `uv.lock` para instalar exactamente las mismas versiones de las librerías con las que se desarrolló el proyecto.
-
-Navega hasta la raíz del proyecto en tu terminal y ejecuta:
+Con `uv` instalado, navega a la raíz del proyecto y ejecuta:
 
 ```bash
 uv sync
 ```
-
-Este único comando se encargará de:
-
-1.  Crear un entorno virtual en una carpeta llamada `.venv` (si no existe).
-2.  Instalar `ttkbootstrap` y todas sus dependencias de forma muy rápida.
+Este comando crea un entorno virtual (`.venv`) e instala `ttkbootstrap` y sus dependencias.
 
 ### 4. Ejecuta la Aplicación
 
-Una vez que el entorno esté sincronizado, puedes ejecutar la aplicación. La forma recomendada es usar `uv` para que se encargue de activar el entorno virtual por ti.
+Para lanzar la aplicación, recomendamos usar `bash run.sh`, ya que soluciona problemas de rutas de librerías automáticamente.
 
-```bash
-uv run main.py
-```
-
-¡Y listo! La ventana de PyXEL Studio debería aparecer en tu pantalla.
+</details>
 
 ## 🎨 Archivo de Muestra
 
 Dentro de la carpeta `assets`, encontrarás un archivo llamado `teacher.csv`. Este es un lienzo de ejemplo que puedes cargar en la aplicación para ver una demostración de lo que se puede crear.
 
 Para cargarlo:
-
 1. Ejecuta la aplicación.
 2. En el campo "Nombre del Archivo", escribe `teacher`.
 3. Haz clic en el botón **"Cargar"**.
@@ -115,6 +107,8 @@ Para cargarlo:
 ```
 PyXEL_Studio/
 ├── main.py                 # Punto de entrada para ejecutar la aplicación.
+├── setup.sh                # Script de configuración automatizada.
+├── run.sh                  # Script de ejecución automatizada.
 ├── README.md               # Este archivo.
 ├── pyproject.toml          # Define las dependencias del proyecto para uv.
 ├── uv.lock                 # Fija las versiones exactas de las dependencias.

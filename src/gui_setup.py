@@ -245,7 +245,7 @@ def crear_btn_paleta(
     style.map(nombre_estilo, background=[("active", color_fondo)])
 
     btn_panel = ttk.Button(panel_paleta, style=nombre_estilo)
-    btn_panel.grid(row=fila, column=columna, padx=5, pady=15)
+    btn_panel.grid(row=fila, column=columna, padx=5, pady=12)
     btn_panel.bind(
         "<Button-1>",
         lambda _event, c=color_fondo: on_color_seleccionado(_event, c, style),
