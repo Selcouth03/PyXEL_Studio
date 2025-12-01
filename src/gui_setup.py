@@ -270,7 +270,7 @@ def atrapar_nombre_archivo(entrada_archivo: ttk.Entry, ventana: ttk.Window):
             title="Confirmar Sobrescritura",
             message=f"El archivo '{nombre}.csv' ya existe.\n¿Desea sobrescribirlo?",
         )
-        if confirmar:
+        if confirmar == "OK":
             # Si el usuario confirma, se intenta guardar de nuevo forzando la sobreescritura
             estado = file_manager.guardar_csv(
                 nombre, matriz_a_guardar, sobreescribir=True
@@ -281,7 +281,7 @@ def atrapar_nombre_archivo(entrada_archivo: ttk.Entry, ventana: ttk.Window):
 
     # 3. Mostrar resultado final de la operación
     if estado == "exito":
-        Messagebox.showinfo(
+        Messagebox.show_info(
             parent=ventana,
             title="Guardado Exitoso",
             message=f"El lienzo se ha guardado como '{nombre}.csv'.",
@@ -315,7 +315,7 @@ def cargar_archivo_guardado(
     if isinstance(resultado, list):
         logic.remplazar_matriz(resultado)
         crear_grid_lienzo(lienzo)
-        Messagebox.showinfo(
+        Messagebox.show_info(
             parent=ventana,
             title="Carga Exitosa",
             message=f"Se ha cargado el lienzo desde '{nombre}.csv'.",
@@ -380,7 +380,7 @@ def eliminar_archivo_guardado(
         alert=True,
     )
 
-    if not confirmar:
+    if confirmar != "OK":
         return
 
     resultado = file_manager.eliminar_csv(nombre)
@@ -388,7 +388,7 @@ def eliminar_archivo_guardado(
     if resultado == "exito":
         logic.remplazar_matriz(logic.crear_matriz_inicial())
         crear_grid_lienzo(lienzo)
-        Messagebox.showinfo(
+        Messagebox.show_info(
             parent=ventana,
             title="Eliminación Exitosa",
             message=f"El archivo '{nombre}.csv' ha sido eliminado.",

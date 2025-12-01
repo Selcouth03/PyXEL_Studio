@@ -141,7 +141,7 @@ def eliminar_csv(nombre_archivo: str) -> str:
         if not ruta_archivo.is_file():
             return "archivo_no_existe"
 
-        ruta_archivo.unlink()
+        ruta_archivo.unlink(missing_ok=True)
 
         return "exito"
 
