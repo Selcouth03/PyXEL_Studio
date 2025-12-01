@@ -4,6 +4,7 @@ Este script se encarga de inicializar la ventana principal de la aplicación,
 configurar el tema y delegar la construcción de la interfaz de usuario al módulo
 `gui_setup`.
 """
+
 import ttkbootstrap as ttk
 from src import gui_setup
 

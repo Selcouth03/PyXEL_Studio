@@ -6,6 +6,7 @@ responden a los eventos del usuario (clics de botón, etc.), conectando la
 interfaz con la lógica de negocio (`logic`) y la persistencia de archivos
 (`file_manager`).
 """
+
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
 from . import logic
@@ -18,9 +19,7 @@ COLUMNAS_PALETA = 3
 
 def crear_interfaz_completa(ventana: ttk.Window):
     """Construye y orquesta la creación de toda la interfaz gráfica de la aplicación."""
-    ventana.geometry(
-        f"{ventana.winfo_screenwidth()}x{ventana.winfo_screenheight()}"
-    )
+    ventana.geometry(f"{ventana.winfo_screenwidth()}x{ventana.winfo_screenheight()}")
     style = ttk.Style()
 
     panel_lateral = _crear_panel_lateral(ventana)
@@ -113,9 +112,7 @@ def _crear_seccion_paleta(parent: ttk.Frame, style: ttk.Style):
             )
 
 
-def _crear_seccion_archivos(
-    parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.Canvas
-):
+def _crear_seccion_archivos(parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.Canvas):
     """Crea la sección de UI para guardar y cargar archivos."""
     panel_archivos = ttk.Frame(parent, bootstyle="secondary")
     panel_archivos.pack(fill="x", side="bottom", pady=20)
@@ -139,9 +136,7 @@ def _crear_seccion_archivos(
     btn_cargar.pack(side="top", anchor="center", pady=10)
     btn_cargar.bind(
         "<Button-1>",
-        lambda _evento: cargar_archivo_guardado(
-            entrada_archivo, ventana, lienzo
-        ),
+        lambda _evento: cargar_archivo_guardado(entrada_archivo, ventana, lienzo),
     )
 
 

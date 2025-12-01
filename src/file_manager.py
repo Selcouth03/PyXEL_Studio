@@ -107,9 +107,7 @@ def cargar_csv(nombre_archivo: str) -> Union[List[List[str]], str]:
 
         # Validación del contenido (códigos de color)
         if not all(
-            _es_color_hex_valido(color)
-            for fila in matriz_cargada
-            for color in fila
+            _es_color_hex_valido(color) for fila in matriz_cargada for color in fila
         ):
             return "formato_invalido"
 

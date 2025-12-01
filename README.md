@@ -71,6 +71,16 @@ uv run python main.py
 
 ¡Y listo! La ventana de PyXEL Studio debería aparecer en tu pantalla.
 
+## 🎨 Archivo de Muestra
+
+Dentro de la carpeta `assets`, encontrarás un archivo llamado `teacher.csv`. Este es un lienzo de ejemplo que puedes cargar en la aplicación para ver una demostración de lo que se puede crear.
+
+Para cargarlo:
+
+1. Ejecuta la aplicación.
+2. En el campo "Nombre del Archivo", escribe `teacher`.
+3. Haz clic en el botón **"Cargar"**.
+
 ## 📁 Estructura del Proyecto
 
 ```
@@ -80,6 +90,7 @@ PyXEL_Studio/
 ├── pyproject.toml          # Define las dependencias del proyecto para uv.
 ├── uv.lock                 # Fija las versiones exactas de las dependencias.
 ├── assets/                 # Directorio para guardar los .csv generados.
+│   └── teacher.csv         # Archivo de ejemplo para cargar.
 └── src/                    # Paquete principal del código fuente.
     ├── gui_setup.py        # Módulo para la construcción de la UI (Vista/Controlador).
     ├── logic.py            # Módulo para el estado y la lógica de negocio (Modelo).
