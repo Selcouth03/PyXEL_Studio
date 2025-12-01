@@ -115,3 +115,35 @@ def cargar_csv(nombre_archivo: str) -> Union[List[List[str]], str]:
 
     except IOError:
         return "error_lectura"
+
+
+def eliminar_csv(nombre_archivo: str) -> str:
+    """Elimina un archivo CSV del directorio 'assets'.
+
+    Args:
+        nombre_archivo (str): El nombre base del archivo a eliminar (sin extensión).
+
+    Returns:
+        str: Un código de estado: "exito", "nombre_vacio", "archivo_no_existe",
+             o "error_eliminacion".
+    """
+    nombre_archivo = nombre_archivo.strip()
+    if not nombre_archivo:
+        return "nombre_vacio"
+
+    nombre_archivo_con_extension = f"{nombre_archivo}.csv"
+
+    try:
+        directorio_actual = Path(__file__).resolve().parent
+        directorio_assets = directorio_actual.parent / "assets"
+        ruta_archivo = directorio_assets / nombre_archivo_con_extension
+
+        if not ruta_archivo.is_file():
+            return "archivo_no_existe"
+
+        ruta_archivo.unlink()
+
+        return "exito"
+
+    except OSError:
+        return "error_eliminacion"

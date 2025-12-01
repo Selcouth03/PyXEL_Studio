@@ -45,10 +45,14 @@ PALETA_COLORES = [
     "#4B0082",  # Índigo (Púrpura oscuro)
 ]
 
+def crear_matriz_inicial() -> list[list[str]]:
+    """Crea y devuelve una matriz nueva con el color de fondo por defecto."""
+    return [["#FFFFFF" for _ in range(COLUMNAS_LIENZO)] for _ in range(FILAS_LIENZO)]
+
+
 # Matriz que representa el estado de cada píxel en el lienzo.
-matriz_colores: list[list[str]] = [
-    ["#FFFFFF" for _ in range(COLUMNAS_LIENZO)] for _ in range(FILAS_LIENZO)
-]
+matriz_colores: list[list[str]] = crear_matriz_inicial()
+
 # Color seleccionado actualmente por el usuario.
 color_actual: str = "#FFFFFF"
 

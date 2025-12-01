@@ -113,7 +113,7 @@ def _crear_seccion_paleta(parent: ttk.Frame, style: ttk.Style):
 
 
 def _crear_seccion_archivos(parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.Canvas):
-    """Crea la sección de UI para guardar y cargar archivos."""
+    """Crea la sección de UI para guardar, cargar y eliminar archivos."""
     panel_archivos = ttk.Frame(parent, bootstyle="secondary")
     panel_archivos.pack(fill="x", side="bottom", pady=20)
 
@@ -137,6 +137,13 @@ def _crear_seccion_archivos(parent: ttk.Frame, ventana: ttk.Window, lienzo: ttk.
     btn_cargar.bind(
         "<Button-1>",
         lambda _evento: cargar_archivo_guardado(entrada_archivo, ventana, lienzo),
+    )
+
+    btn_eliminar = ttk.Button(panel_archivos, text="Eliminar", bootstyle="danger")
+    btn_eliminar.pack(side="top", anchor="center", pady=10)
+    btn_eliminar.bind(
+        "<Button-1>",
+        lambda _evento: eliminar_archivo_guardado(entrada_archivo, ventana, lienzo),
     )
 
 
@@ -322,4 +329,56 @@ def cargar_archivo_guardado(
             parent=ventana,
             title="Error de Carga",
             message="Ocurrió un error inesperado al intentar cargar el archivo.",
+        )
+
+
+def eliminar_archivo_guardado(
+    entrada_archivo: ttk.Entry, ventana: ttk.Window, lienzo: ttk.Canvas
+):
+    """
+    Controlador para el botón Eliminar. Gestiona la lógica de eliminación y la
+    retroalimentación al usuario.
+    """
+    nombre = entrada_archivo.get()
+
+    if not nombre:
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Nombre inválido",
+            message="El nombre del archivo no puede estar vacío.",
+        )
+        return
+
+    confirmar = Messagebox.okcancel(
+        parent=ventana,
+        title="Confirmar Eliminación",
+        message=f"¿Está seguro de que desea eliminar el archivo '{nombre}.csv'?\nEsta acción no se puede deshacer.",
+        alert=True,
+    )
+
+    if not confirmar:
+        return
+
+    resultado = file_manager.eliminar_csv(nombre)
+
+    if resultado == "exito":
+        logic.remplazar_matriz(logic.crear_matriz_inicial())
+        crear_grid_lienzo(lienzo)
+        Messagebox.showinfo(
+            parent=ventana,
+            title="Eliminación Exitosa",
+            message=f"El archivo '{nombre}.csv' ha sido eliminado.",
+        )
+        entrada_archivo.delete(0, "end")
+    elif resultado == "archivo_no_existe":
+        Messagebox.show_warning(
+            parent=ventana,
+            title="Archivo no encontrado",
+            message=f"El archivo '{nombre}.csv' no fue encontrado.",
+        )
+    elif resultado == "error_eliminacion":
+        Messagebox.show_error(
+            parent=ventana,
+            title="Error de Eliminación",
+            message="Ocurrió un error inesperado al intentar eliminar el archivo.",
         )
