@@ -2,20 +2,18 @@
 
 ¡Una sencilla aplicación de escritorio para crear pixel art, construida con Python y `ttkbootstrap`!
 
-![PyXEL Studio Screenshot](https://raw.githubusercontent.com/abrahamselcouth/PyXEL_Studio/main/assets/readme/screenshot.png)
-
 ## ✨ Características
 
-*   **Lienzo de 32x32:** Un lienzo de tamaño clásico para tus creaciones de pixel art.
-*   **Paleta de Colores Predefinida:** Una paleta cuidadosamente seleccionada para empezar a crear de inmediato.
-*   **Guardado y Carga:** Guarda tu progreso en archivos `.csv` y cárgalos más tarde para continuar donde lo dejaste.
-*   **Interfaz Limpia:** Una interfaz de usuario simple y moderna gracias a `ttkbootstrap`.
+- **Lienzo de 32x32:** Un lienzo de tamaño clásico para tus creaciones de pixel art.
+- **Paleta de Colores Predefinida:** Una paleta cuidadosamente seleccionada para empezar a crear de inmediato.
+- **Guardado y Carga:** Guarda tu progreso en archivos `.csv` y cárgalos más tarde para continuar donde lo dejaste.
+- **Interfaz Limpia:** Una interfaz de usuario simple y moderna gracias a `ttkbootstrap`.
 
 ## 🛠️ Tecnologías Utilizadas
 
-*   **Python:** El lenguaje principal de la aplicación.
-*   **ttkbootstrap:** Para la creación de la interfaz gráfica de usuario.
-*   **uv:** Para la gestión del entorno virtual y las dependencias del proyecto.
+- **Python:** El lenguaje principal de la aplicación.
+- **ttkbootstrap:** Para la creación de la interfaz gráfica de usuario.
+- **uv:** Para la gestión del entorno virtual y las dependencias del proyecto.
 
 ## 🚀 Instalación y Ejecución
 
@@ -31,20 +29,22 @@ Este proyecto utiliza `uv`, un instalador y resolutor de paquetes de Python extr
 
 Puedes instalar `uv` de dos maneras:
 
-*   **Opción A (Recomendada): Usando `curl` (Linux, macOS, WSL)**
+- **Opción A (Recomendada): Usando `curl` (Linux, macOS, WSL)**
 
-    Abre tu terminal y ejecuta el siguiente comando. Este método descarga e instala `uv` de forma aislada en tu sistema.
-    ```bash
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
+  Abre tu terminal y ejecuta el siguiente comando. Este método descarga e instala `uv` de forma aislada en tu sistema.
 
-*   **Opción B: Usando `pip`**
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
 
-    Si prefieres, también puedes instalarlo a través de `pip` (asegúrate de tener `pip` actualizado).
-    ```bash
-    pip install uv
-    ```
-Después de la instalación, cierra y vuelve a abrir tu terminal, o ejecuta `source $HOME/.cargo/env` para que el comando `uv` esté disponible.
+- **Opción B: Usando `pip`**
+
+      Si prefieres, también puedes instalarlo a través de `pip` (asegúrate de tener `pip` actualizado).
+      ```bash
+      pip install uv
+      ```
+
+  Después de la instalación, cierra y vuelve a abrir tu terminal, o ejecuta `source $HOME/.cargo/env` para que el comando `uv` esté disponible.
 
 ### 3. Crea y Sincroniza el Entorno Virtual
 
@@ -57,6 +57,7 @@ uv sync
 ```
 
 Este único comando se encargará de:
+
 1.  Crear un entorno virtual en una carpeta llamada `.venv` (si no existe).
 2.  Instalar `ttkbootstrap` y todas sus dependencias de forma muy rápida.
 
